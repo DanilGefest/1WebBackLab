@@ -3,9 +3,9 @@ import {
   deleteUser,
   updateUser,
   getUserInfo,
-  registerStudent, 
-  registerTeacher, 
-  login
+  registerStudent,
+  registerTeacher,
+  login,
 } from "../controllers/UserController";
 import { authenticateToken } from "../services/middlewares/authMiddleware";
 
