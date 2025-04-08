@@ -4,7 +4,7 @@ interface IUser {
   _id: string;
   name: string;
   lastname: string;
-  mail: string;
+  email: string;
   password: string;
   role: number;
 }
@@ -24,7 +24,7 @@ const userSchema: Schema = new Schema<IUser, UserModel, IUserMethods>({
     type: String,
     required: true,
   },
-  mail: {
+  email: {
     type: String,
     required: true,
     unique: true,

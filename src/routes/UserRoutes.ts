@@ -7,7 +7,7 @@ import {
   registerTeacher, 
   login
 } from "../controllers/UserController";
-import { authenticateToken } from "../services/authMiddleware";
+import { authenticateToken } from "../services/middlewares/authMiddleware";
 
 const router = express.Router();
 
