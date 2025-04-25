@@ -6,7 +6,7 @@ import bcrypt from 'bcrypt';
 export const getUserInfo = async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		const { id } = req.body;
-		const user = await Users.findById(id);
+		const user = await Users.findById(id).populate('favorites');
 
 		if (!user) {
 			res.status(404).json({ message: 'Пользователь не найден.' });
@@ -38,23 +38,25 @@ export const deleteUser = async (req: Request, res: Response, next: NextFunction
 
 export const updateUser = async (req: Request, res: Response, next: NextFunction) => {
 	try {
-		const { id, name, lastname, email, password, role } = req.body;
+		const { id, name, lastname, email, password, role, favorites } = req.body;
 
-		const user = await Users.findById(id);
-		if (!user) {
-			res.status(404).json({ message: 'Пользователь не найден.' });
+		const hashedPassword = await bcrypt.hash(password, 10);
+
+		const updateData = { name, lastname, email, password: hashedPassword, role, favorites };
+
+		const updatedUser = await Users.findByIdAndUpdate(id, updateData, {
+			new: true,
+			runValidators: true,
+		})
+			.populate('favorites')
+			.exec();
+
+		if (!updatedUser) {
+			res.status(404).json({ message: 'Пользователь не найден' });
 			return;
 		}
 
-		const hashedPassword = await bcrypt.hash(password, 10);
-		await Users.findByIdAndUpdate(id, {
-			name,
-			lastname,
-			email,
-			hashedPassword,
-			role,
-		});
-		res.status(200).json({ message: 'Пользователь успешно обновлен.' });
+		res.status(200).json({ message: 'Пользователь успешно обновлен.', updatedUser });
 	} catch (error) {
 		next(error);
 	}
@@ -76,7 +78,7 @@ export const registerStudent = async (req: Request, res: Response, next: NextFun
 			lastname,
 			email,
 			password: hashedPassword,
-			role: 1,
+			role: 'student',
 		});
 		await newStudent.save();
 
@@ -107,7 +109,7 @@ export const registerTeacher = async (req: Request, res: Response, next: NextFun
 			lastname,
 			email,
 			password: hashedPassword,
-			role: 2,
+			role: 'teacher',
 		});
 		await newStudent.save();
 
