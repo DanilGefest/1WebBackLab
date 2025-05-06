@@ -5,7 +5,7 @@ export const authenticateToken = async (req: Request, res: Response, next: NextF
 	const token = req.header('authToken');
 
 	if (!token) {
-		res.status(401).json({ message: 'Отклонено, нет токена.' });
+		res.status(401).json({ message: 'Доступ отклонен. Нет токена доступа.' });
 		return;
 	}
 

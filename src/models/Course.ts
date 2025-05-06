@@ -26,10 +26,10 @@ const courseSchema = new Schema<ICourse>({
 	published: { type: Boolean, required: true, default: false },
 	author: { type: String, required: true },
 	createdAt: { type: Number, required: true, default: Date.now },
-	tags: [{ type: Schema.Types.ObjectId, ref: 'Tag' }],
+	tags: [{ type: Schema.Types.ObjectId, ref: 'Tags' }],
 });
 
-const Course = model<ICourse>('Course', courseSchema);
+const Course = model<ICourse>('Courses', courseSchema);
 
 export default Course;
 export { ICourse };

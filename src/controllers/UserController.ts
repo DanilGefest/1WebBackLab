@@ -13,7 +13,7 @@ export const getUserInfo = async (req: Request, res: Response, next: NextFunctio
 			return;
 		}
 
-		res.json({ name: user.name, lastname: user.lastname, email: user.email });
+		res.status(200).json({ name: user.name, lastname: user.lastname, email: user.email });
 	} catch (error) {
 		next(error);
 	}

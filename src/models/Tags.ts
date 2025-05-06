@@ -11,7 +11,7 @@ const tagSchema = new Schema<ITag>({
 	slug: { type: String, required: true, unique: true },
 });
 
-const Tag = model<ITag>('Tag', tagSchema);
+const Tag = model<ITag>('Tags', tagSchema);
 
 export default Tag;
 export { ITag };

@@ -5,7 +5,6 @@ import Tag from '../models/Tags';
 import slugify from 'slugify';
 import deleteFile from '../services/deleteFile';
 
-
 const buildFilterQuery = (search: string): FilterQuery<ICourse> => {
 	const filter: FilterQuery<ICourse> = {};
 	if (search) {
@@ -44,7 +43,6 @@ export const getAllCourses = async (req: Request, res: Response, next: NextFunct
 			.populate('tags')
 			.exec();
 
-		// Count Total Courses
 		const totalCourses = await Course.countDocuments(filter);
 		const totalPages = Math.ceil(totalCourses / limitNumber);
 
@@ -81,9 +79,9 @@ export const getCourseById = async (req: Request, res: Response, next: NextFunct
 
 export const createCourse = async (req: Request, res: Response, next: NextFunction) => {
 	try {
-		const { title, description, price, category, level, published, author, tags } = req.body;
+		const { title, description, price, category, level, published, author, tags, filename } = req.body;
 
-		if (!req.body.filename) {
+		if (!filename) {
 			res.status(400).json({ message: 'Изображение не найдено.' });
 			return;
 		}
@@ -101,7 +99,7 @@ export const createCourse = async (req: Request, res: Response, next: NextFuncti
 			slug: slugify(title),
 			description,
 			price,
-			image: req.body.filename,
+			image: filename,
 			category,
 			level,
 			published,
@@ -113,7 +111,9 @@ export const createCourse = async (req: Request, res: Response, next: NextFuncti
 		const savedCourse = await newCourse.save();
 		res.status(201).json(savedCourse);
 	} catch (error) {
-		await deleteFile('uploads/' + req.body.filename);
+		if(req.body.filename){
+			await deleteFile('uploads/' + req.body.filename);
+		}
 		next(error);
 	}
 };
